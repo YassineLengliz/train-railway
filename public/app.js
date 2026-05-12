@@ -13,6 +13,16 @@ const firebaseConfig = {
 };
 
 // ==========================
+// TELEGRAM CONFIG
+// ==========================
+
+const TELEGRAM_BOT_TOKEN =
+"8722219651:AAHirRmeh7whE6i8V8B1SRZVb9VRJ6w3wYA";
+
+const TELEGRAM_CHAT_ID =
+"5844272984";
+
+// ==========================
 // INITIALIZE FIREBASE
 // ==========================
 
@@ -117,6 +127,54 @@ function startLastTrainTimer()
 // FIREBASE REALTIME LISTENER
 // ==========================
 
+// ==========================
+// SEND TELEGRAM MESSAGE
+// ==========================
+
+function sendTelegramMessage(message)
+{
+  fetch(
+
+`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type":
+        "application/json"
+      },
+
+      body: JSON.stringify({
+
+        chat_id:
+          TELEGRAM_CHAT_ID,
+
+        text:
+          message
+      })
+    }
+  )
+  .then(response => response.json())
+  .then(data => {
+
+    console.log(
+      "Telegram message sent",
+      data
+    );
+
+  })
+  .catch(error => {
+
+    console.error(
+      "Telegram Error:",
+      error
+    );
+
+  });
+}
+
+
 database.ref("railway").on("value", (snapshot) => {
 
   const data = snapshot.val();
@@ -141,10 +199,28 @@ database.ref("railway").on("value", (snapshot) => {
   if(data.status === "TRAIN DETECTED" &&
      !notificationSent)
   {
+
+    
     notificationSent = true;
+
+
+    // TELEGRAM ALERT
+
+sendTelegramMessage(
+
+`🚆 TRAIN ALERT!
+
+A train is arriving at the station.
+
+🕒 ${new Date().toLocaleTimeString()}
+
+🚧 Barrier Closed`
+
+);
 
     // RED INDICATOR
 
+    
     indicator.classList.remove("green");
     indicator.classList.add("red");
 
