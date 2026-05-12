@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Railway Dashboard</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>🚆 Smart Railway Monitoring System</h1>
+
+<div class="cards">
+
+  <div class="card">
+    <h2>Status</h2>
+    <p id="status">Loading...</p>
+  </div>
+
+  <div class="card">
+    <h2>Barrier</h2>
+    <p id="barrier">Loading...</p>
+  </div>
+
+  <div class="card">
+    <h2>Total Trains</h2>
+    <p id="trainCount">0</p>
+  </div>
+
+  <div class="card">
+    <h2>Train Arrival</h2>
+    <p id="arrivalCountdown">-- sec</p>
+  </div>
+
+  <div class="card">
+    <h2>Last Train</h2>
+    <p id="lastTrain">Never</p>
+  </div>
+
+  <div class="card">
+    <h2>Next Train</h2>
+    <p id="nextTrain">Waiting...</p>
+  </div>
+
+</div>
+
+<div class="clock-box">
+  <h2>Current Time</h2>
+  <p id="clock"></p>
+</div>
+
+    <div class="live-box">
+      <h2>Live Railway State</h2>
+      <div id="liveIndicator" class="indicator green"></div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
