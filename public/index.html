@@ -1,31 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
   <title>Smart Railway Dashboard</title>
 
-  <!-- TailwindCSS -->
+  <!-- Tailwind -->
+
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Firebase -->
+
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-  <!-- Google Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font -->
+
+  <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
 
   <style>
 
     *{
-      font-family: 'Poppins', sans-serif;
+      font-family:'Poppins',sans-serif;
     }
 
     body{
+
       background:
-      radial-gradient(circle at top left,#1e293b,#020617);
+      radial-gradient(circle at top left,
+      #1e293b,
+      #020617);
 
       min-height:100vh;
 
@@ -33,11 +51,15 @@
     }
 
     .glass{
-      background: rgba(255,255,255,0.08);
 
-      backdrop-filter: blur(18px);
+      background:
+      rgba(255,255,255,0.08);
 
-      border:1px solid rgba(255,255,255,0.1);
+      backdrop-filter:
+      blur(18px);
+
+      border:
+      1px solid rgba(255,255,255,0.1);
 
       box-shadow:
       0 8px 32px rgba(0,0,0,0.3);
@@ -46,24 +68,37 @@
     }
 
     .glass:hover{
-      transform:translateY(-5px) scale(1.02);
+
+      transform:
+      translateY(-5px)
+      scale(1.02);
     }
 
     .indicator{
+
       width:22px;
       height:22px;
+
       border-radius:50%;
-      animation:pulse 1.5s infinite;
+
+      animation:
+      pulse 1.5s infinite;
     }
 
     .green{
+
       background:#22c55e;
-      box-shadow:0 0 20px #22c55e;
+
+      box-shadow:
+      0 0 20px #22c55e;
     }
 
     .red{
+
       background:#ef4444;
-      box-shadow:0 0 20px #ef4444;
+
+      box-shadow:
+      0 0 20px #ef4444;
     }
 
     @keyframes pulse{
@@ -85,15 +120,19 @@
     }
 
     .train-bg{
+
       position:fixed;
+
       top:0;
+
       left:-400px;
 
       font-size:100px;
 
       opacity:0.03;
 
-      animation:trainMove 20s linear infinite;
+      animation:
+      trainMove 20s linear infinite;
     }
 
     @keyframes trainMove{
@@ -108,52 +147,70 @@
     }
 
   </style>
+
 </head>
 
 <body class="text-white">
 
-  <!-- Animated Background Train -->
+  <!-- BACKGROUND TRAIN -->
+
   <div class="train-bg">
     🚆🚃🚃🚃
   </div>
 
   <div class="max-w-7xl mx-auto px-6 py-10">
 
-    <!-- Header -->
+    <!-- HEADER -->
 
-<div class="text-center mb-12">
+    <div class="text-center mb-12">
 
-  <h1 class="text-5xl md:text-6xl font-bold mb-4">
-    🚆 Smart Railway
-  </h1>
+      <h1
+        class="text-5xl md:text-6xl font-bold mb-4">
 
-  <p class="text-slate-300 text-lg">
-    Real-Time Railway Monitoring System
-  </p>
+        🚆 Smart Railway
 
-</div>
+      </h1>
 
-<!-- NOTIFICATION BUTTON -->
+      <p class="text-slate-300 text-lg">
 
-<div class="flex justify-center mt-6 mb-10">
+        Real-Time Railway Monitoring System
 
-  <button
-    id="notifBtn"
-    class="px-6 py-3 rounded-2xl bg-blue-500 hover:bg-blue-600 transition text-white font-semibold shadow-lg">
+      </p>
 
-    🔔 Enable Notifications
+    </div>
 
-  </button>
+    <!-- NOTIFICATION BUTTON -->
 
-</div>
+    <div class="flex justify-center mb-10">
 
-<!-- CARDS -->
+      <button
+        id="notifBtn"
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        class="
+        px-6 py-3
+        rounded-2xl
+        bg-blue-500
+        hover:bg-blue-600
+        transition
+        text-white
+        font-semibold
+        shadow-lg">
 
-    <!-- Top Grid -->
+        🔔 Enable Notifications
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      </button>
+
+    </div>
+
+    <!-- TOP GRID -->
+
+    <div
+      class="
+      grid
+      grid-cols-1
+      sm:grid-cols-2
+      lg:grid-cols-3
+      gap-8">
 
       <!-- STATUS -->
 
@@ -162,6 +219,7 @@
         <div class="flex items-center justify-between">
 
           <div>
+
             <p class="text-slate-300 text-sm">
               System Status
             </p>
@@ -169,8 +227,11 @@
             <h2
               id="status"
               class="text-3xl font-bold mt-3">
+
               Loading...
+
             </h2>
+
           </div>
 
           <div class="text-5xl">
@@ -196,7 +257,9 @@
             <h2
               id="barrier"
               class="text-3xl font-bold mt-3">
+
               Loading...
+
             </h2>
 
           </div>
@@ -224,7 +287,9 @@
             <h2
               id="trainCount"
               class="text-5xl font-bold mt-3">
+
               0
+
             </h2>
 
           </div>
@@ -248,7 +313,9 @@
         <h2
           id="arrivalCountdown"
           class="text-5xl font-bold mt-4">
+
           -- sec
+
         </h2>
 
       </div>
@@ -264,7 +331,9 @@
         <h2
           id="lastTrain"
           class="text-3xl font-bold mt-4">
+
           Never
+
         </h2>
 
       </div>
@@ -280,16 +349,24 @@
         <h2
           id="nextTrain"
           class="text-3xl font-bold mt-4">
+
           Waiting...
+
         </h2>
 
       </div>
 
     </div>
 
-    <!-- Bottom Grid -->
+    <!-- BOTTOM GRID -->
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
+    <div
+      class="
+      grid
+      grid-cols-1
+      lg:grid-cols-2
+      gap-8
+      mt-10">
 
       <!-- LIVE STATE -->
 
@@ -304,7 +381,9 @@
             </p>
 
             <h2 class="text-3xl font-bold mt-3">
+
               System Active
+
             </h2>
 
           </div>
@@ -320,7 +399,12 @@
 
       <!-- CLOCK -->
 
-      <div class="glass rounded-3xl p-8 text-center">
+      <div
+        class="
+        glass
+        rounded-3xl
+        p-8
+        text-center">
 
         <p class="text-slate-300 text-sm">
           Current Time
@@ -338,17 +422,59 @@
   </div>
 
   <!-- APP JS -->
+
   <script src="app.js"></script>
 
-  <!-- Notification Permission -->
+  <!-- NOTIFICATION BUTTON -->
+
   <script>
 
-    if(Notification.permission !== "granted")
-    {
-      Notification.requestPermission();
-    }
+    const notifBtn =
+      document.getElementById("notifBtn");
+
+    notifBtn.addEventListener(
+      "click",
+
+      async () => {
+
+        const permission =
+          await Notification.requestPermission();
+
+        if(permission === "granted")
+        {
+          new Notification(
+            "🚆 Notifications Enabled",
+            {
+              body:
+              "Train alerts activated."
+            }
+          );
+
+          notifBtn.innerHTML =
+            "✅ Notifications Enabled";
+
+          notifBtn.disabled = true;
+
+          notifBtn.classList.remove(
+            "bg-blue-500",
+            "hover:bg-blue-600"
+          );
+
+          notifBtn.classList.add(
+            "bg-green-500"
+          );
+        }
+        else
+        {
+          alert(
+            "Notification permission denied."
+          );
+        }
+      }
+    );
 
   </script>
 
 </body>
+
 </html>
