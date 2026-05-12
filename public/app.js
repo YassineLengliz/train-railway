@@ -1,4 +1,6 @@
-// Firebase Config
+// ==========================
+// FIREBASE CONFIG
+// ==========================
 
 const firebaseConfig = {
   apiKey: "AIzaSyDiucXk25l2eIVMtQfrFQQFH4NUlxuvZHw",
@@ -10,33 +12,61 @@ const firebaseConfig = {
   appId: "1:388440575642:web:5ff756490a6ca7528b9923"
 };
 
-// Initialize Firebase
+// ==========================
+// INITIALIZE FIREBASE
+// ==========================
 
 firebase.initializeApp(firebaseConfig);
 
 const database = firebase.database();
 
-// Elements
+// ==========================
+// HTML ELEMENTS
+// ==========================
 
 const statusText = document.getElementById("status");
 const barrierText = document.getElementById("barrier");
 const trainCountText = document.getElementById("trainCount");
-const indicator = document.getElementById("liveIndicator");
 
 const arrivalText = document.getElementById("arrivalCountdown");
 const lastTrainText = document.getElementById("lastTrain");
 const nextTrainText = document.getElementById("nextTrain");
 
+const indicator = document.getElementById("liveIndicator");
+
+const clockText = document.getElementById("clock");
+
+// ==========================
+// VARIABLES
+// ==========================
+
 let countdown = 10;
+
 let lastTrainTime = null;
 
-// CLOCK
+let notificationSent = false;
+
+let countdownInterval = null;
+
+let lastTrainInterval = null;
+
+// ==========================
+// REQUEST NOTIFICATION
+// ==========================
+
+if (Notification.permission !== "granted") {
+  Notification.requestPermission();
+}
+
+// ==========================
+// LIVE CLOCK
+// ==========================
 
 function updateClock() {
 
   const now = new Date();
 
-  document.getElementById("clock").textContent =
+  clockText.textContent =
     now.toLocaleTimeString();
 }
 
@@ -44,7 +74,48 @@ setInterval(updateClock, 1000);
 
 updateClock();
 
-// FIREBASE LISTENER
+// ==========================
+// UPDATE LAST TRAIN TIMER
+// ==========================
+
+function startLastTrainTimer()
+{
+  // prevent multiple intervals
+
+  if(lastTrainInterval)
+  {
+    clearInterval(lastTrainInterval);
+  }
+
+  lastTrainInterval = setInterval(() => {
+
+    if(!lastTrainTime) return;
+
+    const now = new Date();
+
+    const diff =
+      Math.floor((now - lastTrainTime) / 1000);
+
+    if(diff < 60)
+    {
+      lastTrainText.textContent =
+        diff + " sec ago";
+    }
+    else
+    {
+      const minutes =
+        Math.floor(diff / 60);
+
+      lastTrainText.textContent =
+        minutes + " min ago";
+    }
+
+  }, 1000);
+}
+
+// ==========================
+// FIREBASE REALTIME LISTENER
+// ==========================
 
 database.ref("railway").on("value", (snapshot) => {
 
@@ -52,81 +123,97 @@ database.ref("railway").on("value", (snapshot) => {
 
   if (!data) return;
 
-  statusText.textContent = data.status;
+  // Update dashboard
 
-  barrierText.textContent = data.barrier;
+  statusText.textContent =
+    data.status || "Unknown";
 
-  trainCountText.textContent = data.trainCount;
+  barrierText.textContent =
+    data.barrier || "Unknown";
 
+  trainCountText.textContent =
+    data.trainCount || 0;
+
+  // ==========================
   // TRAIN DETECTED
+  // ==========================
 
-  if(data.status === "TRAIN DETECTED")
+  if(data.status === "TRAIN DETECTED" &&
+     !notificationSent)
   {
+    notificationSent = true;
 
-    // Push notification
-
-if (Notification.permission === "granted") {
-
-  new Notification("🚆 Train Alert", {
-    body: "A train is arriving at the station!",
-    icon: "https://cdn-icons-png.flaticon.com/512/713/713311.png"
-  });
-
-}
-
+    // RED INDICATOR
 
     indicator.classList.remove("green");
     indicator.classList.add("red");
 
+    // NOTIFICATION
+
+    if(Notification.permission === "granted")
+    {
+      new Notification("🚆 Train Alert", {
+
+        body:
+          "A train is arriving at the station!",
+
+        icon:
+          "https://cdn-icons-png.flaticon.com/512/713/713311.png"
+      });
+    }
+
+    // RESET COUNTDOWN
+
     countdown = 10;
 
-    const interval = setInterval(() => {
+    // CLEAR OLD INTERVAL
+
+    if(countdownInterval)
+    {
+      clearInterval(countdownInterval);
+    }
+
+    // START COUNTDOWN
+
+    countdownInterval = setInterval(() => {
 
       arrivalText.textContent =
         countdown + " sec";
 
       countdown--;
 
+      // TRAIN ARRIVED
+
       if(countdown < 0)
       {
-        clearInterval(interval);
+        clearInterval(countdownInterval);
 
         arrivalText.textContent =
           "Train Arrived";
 
         lastTrainTime = new Date();
 
-        updateLastTrain();
+        startLastTrainTimer();
       }
 
     }, 1000);
 
+    // Example next train estimation
+
+    nextTrainText.textContent =
+      "Estimated in 5 min";
   }
-  else
+
+  // ==========================
+  // NO TRAIN
+  // ==========================
+
+  else if(data.status !== "TRAIN DETECTED")
   {
+    notificationSent = false;
+
     indicator.classList.remove("red");
     indicator.classList.add("green");
   }
+
 });
-
-// LAST TRAIN TIMER
-
-function updateLastTrain()
-{
-  if(!lastTrainTime) return;
-
-  setInterval(() => {
-
-    const now = new Date();
-
-    const diff =
-      Math.floor((now - lastTrainTime) / 1000);
-
-    lastTrainText.textContent =
-      diff + " sec ago";
-
-  }, 1000);
-}
-
-nextTrainText.textContent =
-  "Estimated in 5 min";
