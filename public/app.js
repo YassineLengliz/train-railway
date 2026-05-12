@@ -62,6 +62,19 @@ database.ref("railway").on("value", (snapshot) => {
 
   if(data.status === "TRAIN DETECTED")
   {
+
+    // Push notification
+
+if (Notification.permission === "granted") {
+
+  new Notification("🚆 Train Alert", {
+    body: "A train is arriving at the station!",
+    icon: "https://cdn-icons-png.flaticon.com/512/713/713311.png"
+  });
+
+}
+
+
     indicator.classList.remove("green");
     indicator.classList.add("red");
 

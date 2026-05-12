@@ -63,6 +63,12 @@
   </div>
 
   <script src="app.js"></script>
+<script>
+  // Request notification permission
 
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+</script>
 </body>
 </html>
